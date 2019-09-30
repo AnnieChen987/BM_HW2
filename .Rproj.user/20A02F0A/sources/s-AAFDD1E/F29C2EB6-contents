@@ -1,0 +1,12 @@
+---
+title: "BM_HW2_yc3729"
+author: "Yineng Chen"
+date: "2019/9/30"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
