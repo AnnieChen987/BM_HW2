@@ -1,0 +1,25 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1569848877860.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "9309684",
+    "lastKnownWriteTime" : 1569107564,
+    "last_content_update" : 1569107564,
+    "path" : "E:/我写的R/BM/Lectures/BM_Lecture4/Lect4_DiscrProb.R",
+    "project_path" : null,
+    "properties" : {
+        "cursorPosition" : "21,14",
+        "scrollLine" : "18"
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 4,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

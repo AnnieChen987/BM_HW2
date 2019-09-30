@@ -7,6 +7,38 @@ output: html_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
 ```
+
+# Question 1
+## a)
+```{r}
+ # x : the number of cases of uveal melanoma
+ # n = 8500000 people, p = 5/1000000 prob
+n = 8500000
+p = 5/1000000
+dbinom(30,n,p)
+```
+the probability that there are exactly 30
+cases occur in NYC in 2018 is `0.00934306`
+
+## b)
+```{r}
+pn = 6.02/1000000
+pb = 0.31/1000000
+pa = 0.39/1000000
+
+nn = 8500000 * 0.428
+nb = 8500000 * 0.243
+na = 8500000 * 0.14
+
+#pn30 = dbinom(30,nn,pn)
+#pb30 = dbinom(30,nb,pb)
+#pa30 = dbinom(30,na,pa)
+```
+The probability of having exactly 30 cases occur is `r dbinom(30,nn,pn)` in non-Hispanic Whites,`r dbinom(30,nb,pb)` in black, `r dbinom(30,na,pa)` in Asians.
+
+# Question 2
+
 
 
