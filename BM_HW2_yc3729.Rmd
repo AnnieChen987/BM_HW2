@@ -7,24 +7,38 @@ output: html_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
 ```
 
-## R Markdown
-
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
-
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
-
-```{r cars}
-summary(cars)
+# Question 1
+## a)
+```{r}
+ # x : the number of cases of uveal melanoma
+ # n = 8500000 people, p = 5/1000000 prob
+n = 8500000
+p = 5/1000000
+dbinom(30,n,p)
 ```
+the probability that there are exactly 30
+cases occur in NYC in 2018 is `0.00934306`
 
-## Including Plots
+## b)
+```{r}
+pn = 6.02/1000000
+pb = 0.31/1000000
+pa = 0.39/1000000
 
-You can also embed plots, for example:
+nn = 8500000 * 0.428
+nb = 8500000 * 0.243
+na = 8500000 * 0.14
 
-```{r pressure, echo=FALSE}
-plot(pressure)
+#pn30 = dbinom(30,nn,pn)
+#pb30 = dbinom(30,nb,pb)
+#pa30 = dbinom(30,na,pa)
 ```
+The probability of having exactly 30 cases occur is `r dbinom(30,nn,pn)` in non-Hispanic Whites,`r dbinom(30,nb,pb)` in black, `r dbinom(30,na,pa)` in Asians.
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+# Question 2
+
+
+
