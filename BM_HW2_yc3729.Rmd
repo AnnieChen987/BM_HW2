@@ -8,6 +8,7 @@ output: html_document
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
+rm(list=ls())
 ```
 
 # Question 1
@@ -39,6 +40,104 @@ na = 8500000 * 0.14
 The probability of having exactly 30 cases occur is `r dbinom(30,nn,pn)` in non-Hispanic Whites,`r dbinom(30,nb,pb)` in black, `r dbinom(30,na,pa)` in Asians.
 
 # Question 2
+## a)
+```{r import data, include = FALSE}
+exer_data = read_csv("./data/HW1.csv",col_types = "cicciiiiiiiiddiiiiii") %>% 
+  janitor::clean_names() %>% 
+  mutate( group = recode(group, "1" = "intervention","0" = "control"),
+          gender = recode(gender, "1" = "male","2" = "female"),
+          race = recode(race,"1" = "african american","2" = "hispanic", "3" = "african american", "4" = "Caucasian","5" = "other", "6" = "other"))
+```
+
+```{r select data,include = FALSE}
+con_bmi = exer_data %>% 
+  filter(group == "control") %>% 
+  select(bmi_pre,bmi_post) 
 
 
+inter_bmi = exer_data %>% 
+  filter(group == "intervention") %>% 
+  select(bmi_pre,bmi_post)
+
+```
+
+Perform two_sample t test for the mean of BMI in control group at 6
+months follow-up vs baseline. Testing via build-in functions
+
+### two sample t test for control group
+
+#### Test equality of variances via build-in function
+H0: The variances are equal at baseline and end-point.
+
+H1: The variances are not equal at baseline and end-point.
+```{r F test}
+var.test(pull(con_bmi,bmi_pre),pull(con_bmi,bmi_post),alternative = "two.sided")# accept null hypothesis, the variance are equal
+```
+H0 is accepted, the variance are equal
+
+#### Test equality of means via build-in function
+H0: In control group, there is no difference between the mean of bmi at baseline and  6 months follow-up 
+
+H1: In control group, there is a difference between the mean of bmi at baseline and  6 months follow-up 
+```{r t test}
+con_bmi_ttest = t.test(pull(con_bmi,bmi_pre),pull(con_bmi,bmi_post), var.equal = TRUE, paired = FALSE) 
+con_bmi_ttest# accept null hypothesis, true difference in means is equal to 0
+```
+Therefore, H0 is accepted, there are no differce between the mean of BMI at baseline and the end-point in control group.
+
+
+
+**perform two sample t test via formulation:**
+
+Control group BMI baseline: n1= `r nrow(con_bmi)`, var1 = `r var(pull(con_bmi,bmi_pre))`, x1_bar = `r mean(pull(con_bmi,bmi_pre))`
+
+Control group BMI end-point:n2= `r nrow(con_bmi)`, var2 = `r var(pull(con_bmi,bmi_post))`, x2_bar = `r mean(pull(con_bmi,bmi_post))`
+
+### Test equality of variances via formulation
+H0 = variances are equal in two samples.
+
+H1 = variances are different in two samples.
+```{r}
+num = nrow(con_bmi)
+mean_c_pre = mean(pull(con_bmi,bmi_pre))
+mean_c_post = mean(pull(con_bmi,bmi_post))
+var_c_pre = var(pull(con_bmi,bmi_pre))
+var_c_post = var(pull(con_bmi,bmi_post))
+
+F_stat = var_c_pre/var_c_post
+F_crit1 = qf(.025, df1 = 35, df2 = 35)
+F_crit2 = qf(.975, df1 = 35, df2 = 35)
+
+```
+F_stat falls between F_crit1 and F_crit2. Therefore, H0 is accepted variances are equal in two samples.
+
+### Test equality of means via formulation
+H0 = means are equal in two samples.
+H1 = means are different in two samples.
+```{r}
+std_pooled = sqrt((var_c_pre^2*(num - 1) + var_c_post^2*(num - 1))/(2*num - 2))
+t_stats = (mean_c_pre - mean_c_post)/(std_pooled*sqrt((1/num)+(1/num))) #-0.03265471
+
+t_crit = qt(0.975, 2*num - 2)  #1.994437
+```
+|t_stats|<t_crit.
+H0 is accepted, there are no differce between the mean of BMI at baseline and the end-point in control group.
+
+### two sample t test for intervention group
+Test via build-in function:
+
+H0: In intervention group, there is no difference between the mean of bmi at baseline and 6 months follow-up
+
+H1: In control group, there is a difference between the mean of bmi at baseline and 6 months follow-up
+```{r}
+###Test equality of variances via build-in function################
+# Ho: The variances are equal
+# H1: The variance are not equal
+var.test(pull(inter_bmi,bmi_pre),pull(inter_bmi,bmi_post),alternative = "two.sided") # accept null hypothesis, the variance are equal
+
+###Test equality of mean via build-in function######################
+inter_bmi_ttest = t.test(pull(inter_bmi,bmi_pre),pull(inter_bmi,bmi_post), var.equal = TRUE, paired = FALSE) 
+inter_bmi_ttest# accept null hypothesis, true difference in means is equal to 0
+```
+Therefore, H0 is accepted, there are no differce between the mean of BMI at baseline and the end-point in intervention group.
 

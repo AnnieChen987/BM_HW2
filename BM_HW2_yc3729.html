@@ -397,6 +397,145 @@ na = 8500000 * 0.14
 <p>The probability of having exactly 30 cases occur is 0.0189991 in non-Hispanic Whites,3.088718510^{-39} in black, 2.360354310^{-43} in Asians.</p>
 </div>
 </div>
+<div id="question-2" class="section level1">
+<h1>Question 2</h1>
+<div id="a-1" class="section level2">
+<h2>a)</h2>
+<p>Perform two_sample t test for the mean of BMI in control group at 6 months follow-up vs baseline. Testing via build-in functions</p>
+<div id="two-sample-t-test-for-control-group" class="section level3">
+<h3>two sample t test for control group</h3>
+<div id="test-equality-of-variances-via-build-in-function" class="section level4">
+<h4>Test equality of variances via build-in function</h4>
+<p>H0: The variances are equal at baseline and end-point.</p>
+<p>H1: The variances are not equal at baseline and end-point.</p>
+<pre class="r"><code>var.test(pull(con_bmi,bmi_pre),pull(con_bmi,bmi_post),alternative = &quot;two.sided&quot;)# accept null hypothesis, the variance are equal</code></pre>
+<pre><code>## 
+##  F test to compare two variances
+## 
+## data:  pull(con_bmi, bmi_pre) and pull(con_bmi, bmi_post)
+## F = 1.0678, num df = 35, denom df = 35, p-value = 0.8472
+## alternative hypothesis: true ratio of variances is not equal to 1
+## 95 percent confidence interval:
+##  0.5444982 2.0940703
+## sample estimates:
+## ratio of variances 
+##            1.06781</code></pre>
+<p>H0 is accepted, the variance are equal</p>
+</div>
+<div id="test-equality-of-means-via-build-in-function" class="section level4">
+<h4>Test equality of means via build-in function</h4>
+<p>H0: In control group, there is no difference between the mean of bmi at baseline and 6 months follow-up</p>
+<p>H1: In control group, there is a difference between the mean of bmi at baseline and 6 months follow-up</p>
+<pre class="r"><code>con_bmi_ttest = t.test(pull(con_bmi,bmi_pre),pull(con_bmi,bmi_post), var.equal = TRUE, paired = FALSE) 
+con_bmi_ttest# accept null hypothesis, true difference in means is equal to 0</code></pre>
+<pre><code>## 
+##  Two Sample t-test
+## 
+## data:  pull(con_bmi, bmi_pre) and pull(con_bmi, bmi_post)
+## t = -0.19818, df = 70, p-value = 0.8435
+## alternative hypothesis: true difference in means is not equal to 0
+## 95 percent confidence interval:
+##  -3.134755  2.568088
+## sample estimates:
+## mean of x mean of y 
+##  34.22778  34.51111</code></pre>
+<p>Therefore, H0 is accepted, there are no differce between the mean of BMI at baseline and the end-point in control group.</p>
+<p><strong>perform two sample t test via formulation:</strong></p>
+<p>Control group BMI baseline: n1= 36, var1 = 37.9986349, x1_bar = 34.2277778</p>
+<p>Control group BMI end-point:n2= 36, var2 = 35.5855873, x2_bar = 34.5111111</p>
+</div>
+</div>
+<div id="test-equality-of-variances-via-formulation" class="section level3">
+<h3>Test equality of variances via formulation</h3>
+<p>H0 = variances are equal in two samples.</p>
+<p>H1 = variances are different in two samples.</p>
+<pre class="r"><code>num = nrow(con_bmi)
+mean_c_pre = mean(pull(con_bmi,bmi_pre))
+mean_c_post = mean(pull(con_bmi,bmi_post))
+var_c_pre = var(pull(con_bmi,bmi_pre))
+var_c_post = var(pull(con_bmi,bmi_post))
+
+F_stat = var_c_pre/var_c_post
+F_crit1 = qf(.025, df1 = 35, df2 = 35)
+F_crit2 = qf(.975, df1 = 35, df2 = 35)</code></pre>
+<p>F_stat falls between F_crit1 and F_crit2. Therefore, H0 is accepted variances are equal in two samples.</p>
+</div>
+<div id="test-equality-of-means-via-formulation" class="section level3">
+<h3>Test equality of means via formulation</h3>
+<p>H0 = means are equal in two samples. H1 = means are different in two samples.</p>
+<pre class="r"><code>std_pooled = sqrt((var_c_pre^2*(num - 1) + var_c_post^2*(num - 1))/(2*num - 2))
+t_stats = (mean_c_pre - mean_c_post)/(std_pooled*sqrt((1/num)+(1/num))) #-0.03265471
+
+t_crit = qt(0.975, 2*num - 2)  #1.994437</code></pre>
+<p>|t_stats|&lt;t_crit. H0 is accepted, there are no differce between the mean of BMI at baseline and the end-point in control group.</p>
+</div>
+<div id="two-sample-t-test-for-intervention-group" class="section level3">
+<h3>two sample t test for intervention group</h3>
+<p>Test via build-in function:</p>
+<p>H0: In intervention group, there is no difference between the mean of bmi at baseline and 6 months follow-up</p>
+<p>H1: In control group, there is a difference between the mean of bmi at baseline and 6 months follow-up</p>
+<pre class="r"><code># Null hypothesis: In control group, there is no difference between the mean of bmi at baseline and  6 months follow-up 
+# Alternative hypothesis: In control group, there is a difference between the mean of bmi at baseline and  6 months follow-up 
+
+###Test equality of variances via build-in function################
+var.test(pull(con_bmi,bmi_pre),pull(con_bmi,bmi_post),alternative = &quot;two.sided&quot;)</code></pre>
+<pre><code>## 
+##  F test to compare two variances
+## 
+## data:  pull(con_bmi, bmi_pre) and pull(con_bmi, bmi_post)
+## F = 1.0678, num df = 35, denom df = 35, p-value = 0.8472
+## alternative hypothesis: true ratio of variances is not equal to 1
+## 95 percent confidence interval:
+##  0.5444982 2.0940703
+## sample estimates:
+## ratio of variances 
+##            1.06781</code></pre>
+<pre class="r"><code># accept null hypothesis, the variance are equal
+
+###Test equality of mean via build-in function######################
+con_bmi_ttest = t.test(pull(con_bmi,bmi_pre),pull(con_bmi,bmi_post), var.equal = TRUE, paired = FALSE) 
+con_bmi_ttest</code></pre>
+<pre><code>## 
+##  Two Sample t-test
+## 
+## data:  pull(con_bmi, bmi_pre) and pull(con_bmi, bmi_post)
+## t = -0.19818, df = 70, p-value = 0.8435
+## alternative hypothesis: true difference in means is not equal to 0
+## 95 percent confidence interval:
+##  -3.134755  2.568088
+## sample estimates:
+## mean of x mean of y 
+##  34.22778  34.51111</code></pre>
+<pre class="r"><code># accept null hypothesis, true difference in means is equal to 0
+
+#####################################################################
+### Test equality of variances via fomulation######################
+###H0 = variances are equal in two samples
+### H1 = variances are different in two samples
+num = nrow(con_bmi)
+mean_c_pre = mean(pull(con_bmi,bmi_pre))
+mean_c_post = mean(pull(con_bmi,bmi_post))
+var_c_pre = var(pull(con_bmi,bmi_pre))
+var_c_post = var(pull(con_bmi,bmi_post))
+
+F_stat = var_c_pre/var_c_post
+F_crit1 = qf(.025, df1 = 35, df2 = 35)
+F_crit2 = qf(.975, df1 = 35, df2 = 35)
+# F_stat falls between F_crit1 and F_crit2
+# accept H0: variances are equal in two samples
+
+###Use two-sample t-test with equal variances.
+###H0 = means are equal in two samples
+### H1 = means are different in two samples
+std_pooled = sqrt((var_c_pre^2*(num - 1) + var_c_post^2*(num - 1))/(2*num - 2))
+t_stats = (mean_c_pre - mean_c_post)/(std_pooled*sqrt((1/num)+(1/num))) #-0.03265471
+
+t_crit = qt(0.975, 2*num - 2)  #1.994437
+# |t_stats|&lt;t_crit
+# H0 is accepted, there are no differce between the mean of BMI at baseline and the end-point in control group.</code></pre>
+</div>
+</div>
+</div>
 
 
 
